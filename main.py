@@ -1,5 +1,5 @@
 from sklearn.datasets import load_iris, load_wine, load_breast_cancer
-import selectors
+import selectors_lib
 
 if __name__ == '__main__':
     print("hello world!")
