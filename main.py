@@ -1,7 +1,7 @@
 from sklearn.datasets import load_iris, load_wine, load_breast_cancer
 import selectors_lib as slct
 
-if __name__ == '__main__':
+def main():
     iris = load_iris()
     wine = load_wine()
     breast_cancer = load_breast_cancer()
@@ -21,3 +21,14 @@ if __name__ == '__main__':
         print("No selectors: " + str(slct.knn_score(X[i], y[i])) + "%")
         print("Forward search selector: " + str(forward_selector) + "%")
         print("Variance threshold selector: " + str(variance_selector) + "%")
+
+def test():
+    iris = load_iris()
+    X = iris.data
+    y = iris.target
+    X, y = slct.randomize_data(X, y)
+    print("Iris %, no selectors: " + str(slct.knn_score(X, y)) + "%")
+
+if __name__ == '__main__':
+    # test() 
+    main() 

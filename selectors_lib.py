@@ -3,18 +3,21 @@ from random import randrange
 from sklearn.neighbors import KNeighborsClassifier 
 
 def randomize_data(X, y):
-    for _ in range(1000):
-        index1 = randrange(len(X)) 
-        index2 = randrange(len(X)) 
-        X[index1], X[index2] = X[index2], X[index1]
-        y[index1], y[index2] = y[index2], y[index1]
-    return X, y
+    size = len(X)
+    new_X = X.tolist()
+    new_y = y.tolist()
+    for _ in range(size):
+        index1 = randrange(len(X))
+        index2 = randrange(len(X))
+        new_X[index1], new_X[index2] = new_X[index2], new_X[index1]
+        new_y[index1], new_y[index2] = new_y[index2], new_y[index1]
+    return new_X, new_y
 
-def split_data(X, y, train=0.2):
-    split = int(len(X) * train)
-    X_train = X[split:]
+def split_data(X, y):
+    split = int(len(X) / 3)
+    X_train = X[split:] 
+    y_train = y[split:] 
     X_test = X[:split]
-    y_train = y[split:]
     y_test = y[:split]
     return X_train, X_test, y_train, y_test
 
@@ -27,7 +30,7 @@ def knn_score(X, y):
     for i in range(len(predicted)):
         if predicted[i] == y_test[i]:
             score += 1
-    return (score / len(y_test)) * 100
+    return round((score / len(predicted)) * 100, 2)
 
 def variance_threshold(X, threshold=0):
     new_X = np.copy(X)
@@ -56,7 +59,7 @@ def forward_search(X, y, features_number=-1):
         for num in numbers:
             curr.append(num)
             curr.sort()
-            XX = X[:, curr]
+            XX = np.array(X)[:, curr].tolist()
             score = knn_score(XX, y)
             if score > curr_best_score:
                 curr_best_score = score
@@ -66,6 +69,6 @@ def forward_search(X, y, features_number=-1):
                 best_score = score
                 best = curr[:]
             curr.remove(num)
-    new_X = X[:, best]
+    new_X = np.array(X)[:, best].tolist()
     return new_X
     
