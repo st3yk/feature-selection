@@ -6,7 +6,7 @@ def randomize_data(X, y):
     size = len(X)
     new_X = X.tolist()
     new_y = y.tolist()
-    for _ in range(size):
+    for _ in range(1000):
         index1 = randrange(len(X))
         index2 = randrange(len(X))
         new_X[index1], new_X[index2] = new_X[index2], new_X[index1]
