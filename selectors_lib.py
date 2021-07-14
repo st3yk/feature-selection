@@ -1,6 +1,7 @@
 import numpy as np
 from random import randrange 
 from sklearn.neighbors import KNeighborsClassifier 
+import statistics
 
 def randomize_data(X, y):
     size = len(X)
@@ -66,9 +67,52 @@ def forward_search(X, y, features_number=-1):
                 curr_best = curr[:]
             
             if score > best_score:
-                best_score = score
+                best_score = score 
                 best = curr[:]
             curr.remove(num)
     new_X = np.array(X)[:, best].tolist()
     return new_X
+
+def correlation_threshold(X, threshold=0.9):
+    new_X = np.copy(X)
+    means = []
+    drop = []
+    correlations = calculate_correlations(X)
+    for i in range(len(correlations)):
+        means.append(statistics.mean(correlations[i]))
+    for i in range(len(correlations)):
+        for j in range(len(correlations)):
+            if correlations[i][j] > threshold and i not in drop and j not in drop:
+                if means[i] > means[j]:
+                    drop.append(i)
+                else:
+                    drop.append(j) 
+    for i in range(len(drop)):
+        new_X = np.delete(new_X, drop[i] - i, 1)
+    return new_X
     
+def calculate_correlations(X):
+    size = len(X[0])
+    correlations = np.zeros((size, size))
+    for i in range(int(size / 2) + 1):
+        for j in range(size):
+            if i == j : 
+                correlations[i][j] = 0
+            else:
+               correlations [i][j] = calculate_one(X[i], X[j]) 
+            correlations[j][i] = correlations[i][j]
+    return correlations
+
+def calculate_one(a, b):
+    a_avg = sum(a) / len(a)
+    b_avg = sum(b) / len(b)
+    nominator = 0
+    denominator_a = 0
+    denominator_b = 0
+    for i in range(len(a)):
+        nominator += (a[i] - a_avg) * (b[i] - b_avg)
+        denominator_a  += (a[i] - a_avg) ** 2
+        denominator_b  += (b[i] - b_avg) ** 2
+    denominator = (denominator_a * denominator_b) ** 0.5
+    return abs(nominator / denominator)
+
