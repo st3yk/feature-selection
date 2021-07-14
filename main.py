@@ -14,13 +14,16 @@ def main():
         X[i], y[i] = slct.randomize_data(X[i], y[i]) 
         forward_search = slct.forward_search(X[i], y[i])
         variance_threshold = slct.variance_threshold(X[i])
+        correlation_threshold = slct.correlation_threshold(X[i])
         no_selectors = slct.knn_score(X[i], y[i]) 
         forward_selector = slct.knn_score(forward_search, y[i]) 
         variance_selector = slct.knn_score(variance_threshold, y[i])
+        correlation_selector = slct.knn_score(correlation_threshold, y[i])
         
         print("No selectors: " + str(slct.knn_score(X[i], y[i])) + "%")
         print("Forward search selector: " + str(forward_selector) + "%")
         print("Variance threshold selector: " + str(variance_selector) + "%")
+        print("Correlation threshold selector: " + str(correlation_selector) + "%")
 
 def test():
     iris = load_iris()
